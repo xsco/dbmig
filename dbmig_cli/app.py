@@ -1,36 +1,67 @@
 """
     Command-line main() interface for running dbmig operations
 """
-"""
-    dbmig - Database schema migration tool
-    Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
+# dbmig - Database schema migration tool
+# Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
-
+import os
 import sys
 import argparse
-import dbmig.changelog as changelog
-import dbmig.driver_manager as dm
+import dbmig.changelog
+import dbmig.driver_manager
+
+version = {}
+with open(os.path.dirname(os.path.realpath(__file__)) + "/version.py") as fp:
+    exec(fp.read(), version)
+
+def print_usage():
+    print("Usage:")
+    print("dbmig command [-t database] [options]")
+    print()
+    print("Supported commands:")
+    print("help                - print this help message")
+    print("print-version       - print dbmig version and exist")
+    print("show                - print the currently-installed version of a database")
+    print("check               - check repository compatibility against a database")
+    print("migrate             - migrate a database to a new version")
+    print("purge               - permanently delete the whole of a database")
+    print("create-unversioned  - create an unversioned database from raw scripts")
+    print("override-version    - forcibly override the version of an existing database")
+    print()
+    print("Generic options:")
+    print("  -t [ --target ] arg         target database connection string")
+    print("  --changeset arg (=default)  name of changeset within target database")
+    print("  -f [ --force ]              do not prompt for confirmation for any operation")
+    print("                              which modifies the database")
+    print("  -v [ --verbose ]            print additional messages about what's going on")
+
+def help(args):
+    print_usage()
+
+def print_version(args):
+    print("dbmig %s" % version["__version__"])
 
 def show(args):
     if args.target == "":
         print("TARGET must be provided for `show' command", file=sys.stderr)
         exit(1)
 
-    conn = dm.connect(args.target)
-    cl = changelog.Changelog(conn, args.changeset)
+    conn = dbmig.driver_manager.connect(args.target)
+    cl = dbmig.changelog.Changelog(conn, args.changeset)
     if args.verbose and not cl.installed():
         print("No changelog table currently exists")
 
@@ -48,9 +79,13 @@ def func_not_yet_implemented(args):
 
 # Permissible commands and their explanations.
 commands = {
+    "help": {
+      "desc": "Print this help message",
+      "func": help
+    },
     "print-version": {
-      "desc": "Print the version",
-      "func": func_not_yet_implemented # TODO - NYI
+      "desc": "Print version and exit",
+      "func": print_version
     },
     "show": {
       "desc": "Show the current version",

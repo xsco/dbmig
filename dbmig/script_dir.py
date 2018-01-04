@@ -1,3 +1,6 @@
+"""
+    Access a directory containing versioned database scripts
+"""
 # dbmig - Database schema migration tool
 # Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
 #
@@ -13,4 +16,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from pathlib import Path
+
+class ScriptDir(object):
+    """ Represents a database source code versioned script directory """
+    
+    def __init__(self):
+        pass
+
+# TODO - use sortedcontainers? http://grantjenks.com/docs/sortedcontainers
+# (now giving 404)
 

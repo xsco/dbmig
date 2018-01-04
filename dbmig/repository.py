@@ -1,3 +1,6 @@
+"""
+    Access a database source code repository on disk
+"""
 # dbmig - Database schema migration tool
 # Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
 #
@@ -13,4 +16,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from pathlib import Path
+
+class Repository(object):
+    """ Represents a database source code repository on disk """
+    
+    def __init__(self, path):
+        self.path = path
+        p = Path(path)
+        self.install_script_path = str(p / "install")
+        self.upgrade_script_path = str(p / "upgrade")
+        self.latest_schema_path = str(p / "latest")
 

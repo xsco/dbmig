@@ -1,3 +1,6 @@
+"""
+    Test the driver_manager module
+"""
 # dbmig - Database schema migration tool
 # Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
 #
@@ -13,4 +16,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import unittest
+import dbmig.driver_manager as dm
+
+class DriverManagerTestCase(unittest.TestCase):
+    """ Tests for the driver_manager module """
+    
+    def test_invalid(self):
+        """ Test behaviour with invalid connection strings """
+        with self.assertRaises(dm.NoDriverFoundException):
+            dm.parse_driver("")
+        with self.assertRaises(dm.InvalidConnectionStringException):
+            dm.parse_driver("foo://bar://baz")
+
+    def test_valid(self):
+        """ Test behaviour with valid connection strings """
+        self.assertEqual(dm.parse_driver("foo://bar"), ("foo", "bar"))
+
+
+if __name__ == '__main__':
+    unittest.main()
 

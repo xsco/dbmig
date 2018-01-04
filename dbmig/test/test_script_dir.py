@@ -1,3 +1,6 @@
+"""
+    Test the script_dir module
+"""
 # dbmig - Database schema migration tool
 # Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
 #
@@ -13,4 +16,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+import unittest
+import dbmig.script_dir
+from pathlib import Path
+
+# Directory in which test data can be found
+def _data_path():
+    return Path(__file__).parent / "data"
+
+class RepositoryTestCase(unittest.TestCase):
+    """ Tests for the script_dir module """
+    # TODO
+
+
+if __name__ == '__main__':
+    unittest.main()
 

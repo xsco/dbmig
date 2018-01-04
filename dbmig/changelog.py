@@ -1,23 +1,25 @@
-'''
-    dbmig - Database schema migration tool
-    Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''
+"""
+    Access a changelog within a target database environment
+"""
+# dbmig - Database schema migration tool
+# Copyright (C) 2012-2015  Adam Szmigin (adam.szmigin@xsco.net)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 class Changelog(object):
+    """ Represents a changelog within a target database environment """
 
     def __init__(self, conn, changeset="default", sql_dialect=None):
         self.conn = conn
@@ -57,10 +59,8 @@ class Changelog(object):
                 LIMIT 1
                 """,
                 (self.changeset,))
-            row = cur.fetchone()
-            ver = row[0]
-            return ver # TODO - convert to SemVer object?
-            # There is a package: https://github.com/k-bx/python-semver
+            ver = cur.fetchone()[0]
+            return ver
         finally:
             cur.close()
 
